@@ -170,3 +170,44 @@ const MyComponent = ({ data }) => {
 
 ## Tóm lại, useMemo là một công cụ hữu ích khi bạn cần tối ưu hóa hiệu suất cho các phép toán phức tạp hoặc khi bạn muốn tránh việc tái tạo các giá trị không cần thiết.
 
+## Ta có đoạn code hay
+
+```tsx
+const onClick = () => {
+
+    if(items && items.length > 0) {
+        return setExpanded(!expanded);
+    }
+    router.push(path);
+}
+```
+
+- Khi ta bấm vào một menu có không SubmenuItem thì nó sẽ chuyển trang, còn khi ta bấm vào một menu có SubmenuItem thì ta sẽ hiện những SubmenuItem đó và không chuyển trang
+
+## Bug : Khi ta bấm vào 1 submenu thì thằng cha đang không có màu.
+
+- Ban đầu
+
+```tsx
+const isActive = useMemo(() => {
+    return path === pathName;
+}, [path, pathName])
+```
+
+- Sửa lại
+
+```tsx
+const isActive = useMemo(() => {
+    if (items && items.length > 0) {
+        return items.some((item) => item.path === pathName);
+    }
+    return path === pathName;
+}, [path, pathName, items]);
+    
+useEffect(() => {
+    if (isActive) {
+        setExpanded(true);
+    }
+}, [isActive]);
+```
+
