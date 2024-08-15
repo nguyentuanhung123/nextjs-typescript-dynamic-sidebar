@@ -211,3 +211,27 @@ useEffect(() => {
 }, [isActive]);
 ```
 
+## Ban đầu ta có đoạn mã như bên dưới. Đoạn mã bạn cung cấp sử dụng useMemo để tính toán giá trị của biến isActive. Dưới đây là cách mà useMemo hoạt động trong trường hợp này và một số điểm cần lưu ý:
+
+```tsx
+const isActive = useMemo(() => {
+    if (items && items.length > 0) {
+        if (items.find((item) => item.path === pathName)) {
+            setExpanded(true);
+            return true;
+        }
+    }
+
+    return path === pathName;
+}, [path, pathName, items]);
+```
+
+## Những điểm cần lưu ý
+
+- Ghi nhớ giá trị tính toán: useMemo giúp tránh việc tái tính toán giá trị của isActive nếu các phụ thuộc không thay đổi, giúp cải thiện hiệu suất nếu tính toán hoặc kiểm tra là đắt đỏ.
+- Cập nhật trạng thái: Việc gọi setExpanded(true) trong useMemo có thể gây vấn đề vì useMemo không nên được sử dụng để cập nhật trạng thái. useMemo chỉ nên được sử dụng để ghi nhớ giá trị tính toán. Nếu cần cập nhật trạng thái dựa trên một điều kiện, bạn nên sử dụng useEffect hoặc các hooks khác thay vì useMemo.
+- Tối ưu hóa hiệu suất: Nếu phép toán trong useMemo là nhẹ nhàng và không tốn nhiều tài nguyên, việc sử dụng useMemo có thể không mang lại lợi ích lớn về hiệu suất. Tuy nhiên, nếu bạn thấy rằng việc kiểm tra items và cập nhật trạng thái là đắt đỏ và xảy ra thường xuyên, việc sử dụng useMemo có thể giúp cải thiện hiệu suất.
+- Đảm bảo tính chính xác: Đảm bảo rằng path, pathName, và items là các giá trị mà bạn muốn theo dõi sự thay đổi để tính toán lại giá trị của isActive.
+
+## Như vậy, việc sử dụng useMemo trong trường hợp này có thể giúp tránh tính toán lại không cần thiết, nhưng hãy chắc chắn rằng bạn không sử dụng nó để cập nhật trạng thái, mà thay vào đó nên sử dụng các hook phù hợp như useEffect cho việc đó.
+

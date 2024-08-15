@@ -39,6 +39,7 @@ const SidebarItem = ({ item }: { item: ISidebarItem }) => {
 
     /**
      * Ta muốn thằng con có màu thì thằng cha cũng phải có màu
+     * Hàm isActive sẽ luôn được chạy khi ta thay đổi đường dẫn pathName
      */
     const isActive = useMemo(() => {
         if (items && items.length > 0) {
